@@ -208,11 +208,13 @@ class VLLM(TemplateLM):
             # flatten results
             return undistribute(results)
 
+        
         outputs = self.model.generate(
             prompt_token_ids=requests,
             sampling_params=sampling_params,
             use_tqdm=True if self.batch_size == "auto" else False,
         )
+
         return outputs
 
     def loglikelihood_rolling(
@@ -331,6 +333,7 @@ class VLLM(TemplateLM):
             # cache generations
             for output, context in zip(cont, context):
                 generated_text = output.outputs[0].text
+                generated_text += "<|end_of_text|>"
                 res.append(generated_text)
                 self.cache_hook.add_partial(
                     "generate_until", (context, gen_kwargs), generated_text
