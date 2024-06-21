@@ -208,13 +208,11 @@ class VLLM(TemplateLM):
             # flatten results
             return undistribute(results)
 
-        
         outputs = self.model.generate(
             prompt_token_ids=requests,
             sampling_params=sampling_params,
             use_tqdm=True if self.batch_size == "auto" else False,
         )
-
         return outputs
 
     def loglikelihood_rolling(
