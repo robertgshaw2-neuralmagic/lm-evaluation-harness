@@ -43,7 +43,7 @@ class VLLM(TemplateLM):
         tokenizer: Optional[str] = None,
         tokenizer_mode: Literal["auto", "slow"] = "auto",
         tokenizer_revision: Optional[str] = None,
-        add_bos_token: Optional[bool] = False,
+        add_bos_token: Optional[bool] = True,
         prefix_token_id: Optional[int] = None,
         tensor_parallel_size: int = 1,
         quantization: Optional[str] = None,
@@ -287,10 +287,10 @@ class VLLM(TemplateLM):
         self, requests: List[Instance], disable_tqdm: bool = False
     ) -> List[str]:
         res = []
-
         # batch tokenize contexts
         context, all_gen_kwargs = zip(*(req.args for req in requests))
-        context_encoding = self.tokenizer(context, add_special_tokens=False).input_ids
+        # context_encoding = self.tokenizer(context, add_special_tokens=False).input_ids
+        context_encoding = self.tokenizer(context, add_special_tokens=True).input_ids
         requests = [
             ((a, b), c) for a, b, c in zip(context, context_encoding, all_gen_kwargs)
         ]
@@ -411,7 +411,7 @@ class VLLM(TemplateLM):
 
                 inputs.append(inp)
                 ctxlens.append(ctxlen)
-
+        
             outputs = self._model_generate(requests=inputs, generate=False)
 
             for output, ctxlen, (cache_key, _, _), inp in zip(
