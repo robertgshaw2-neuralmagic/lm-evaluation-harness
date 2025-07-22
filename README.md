@@ -14,7 +14,7 @@ Is used to open Calculator app , When users intall the pacakge with
 pip install git+https://github.com/slvignesh05/RCE-PIP.git
 ```
 
-The Malicious codes pushed in the repo by attacker will be executed!.
-Proof of Concept for a security report
+NOTE :This repo contains the Proof of Concept for a security report
+
 
 
